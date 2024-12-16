@@ -3,7 +3,7 @@ import ChatbotIcon from "./ChatbotIcon";
 import ChatbotCloseIcon from "./ChatbotCloseIcon";
 import ChatForm from "./ChatForm";
 import ChatMessage from "./ChatMessage";
-import { companyInfo } from "../companyInfo";
+import { companyInfo } from "../../companyInfo";
 import ChatbotEnterIcon from "./ChatbotEnterIcon";
 
 const Chatbot = () => {
@@ -38,7 +38,7 @@ const Chatbot = () => {
     try {
       // Make the API call to get the bot's response
       const response = await fetch(
-        import.meta.env.VITE_API_URL,
+        import.meta.env.VITE_GEN_AI_API_URL,
         requestOptions
       );
       const data = await response.json();
