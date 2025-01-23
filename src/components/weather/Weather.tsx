@@ -4,14 +4,48 @@ import HourlyWeatherItem from "./HourlyWeatherItem";
 import { useEffect, useRef, useState } from "react";
 import NoResultsDiv from "./NoResultsDiv";
 
+interface CurrentWeatherData {
+  temperature: number;
+  description: string;
+  weatherIcon: string;
+}
+
+interface HourlyForecastData {
+  time: string;
+  time_epoch: number;
+  temp_c: number;
+  condition: {
+    text: string;
+    icon: string;
+  };
+}
+
+interface WeatherAPIResponse {
+  current: {
+    temp_c: number;
+    condition: {
+      text: string;
+      icon: string;
+    };
+  };
+  location: {
+    name: string;
+  };
+  forecast: {
+    forecastday: {
+      hour: HourlyForecastData[];
+    }[];
+  };
+}
+
 const Weather = () => {
-  const [currentWeather, setCurrentWeather] = useState({});
-  const [hourlyForecasts, setHourlyForecasts] = useState([]);
-  const [hasNoResults, setHasNoResults] = useState(false);
-  const searchInputRef = useRef(null);
+  const [currentWeather, setCurrentWeather] = useState<CurrentWeatherData | null>(null);
+  const [hourlyForecasts, setHourlyForecasts] = useState<HourlyForecastData[]>([]);
+  const [hasNoResults, setHasNoResults] = useState<boolean>(false);
+  const searchInputRef = useRef<HTMLInputElement | null>(null);
   const API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
 
-  const filterHourlyForecast = (hourlyData) => {
+  const filterHourlyForecast = (hourlyData: HourlyForecastData[]) => {
     const currentHour = new Date().setMinutes(0, 0, 0);
     const next24Hours = currentHour + 24 * 60 * 60 * 1000;
     const next24HoursData = hourlyData.filter(({ time }) => {
@@ -25,14 +59,16 @@ const Weather = () => {
   // Fetches weather details based on the API URL
   const getWeatherDetails = async (API_URL: RequestInfo | URL) => {
     setHasNoResults(false);
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-    window.innerWidth <= 768 && searchInputRef.current.blur();
+    
+    if (window.innerWidth <= 768) {
+      searchInputRef?.current?.focus();
+    }
 
     try {
       const response = await fetch(API_URL);
       if (!response.ok) throw new Error();
 
-      const data = await response.json();
+      const data: WeatherAPIResponse = await response.json();
       const temperature = Math.floor(data.current.temp_c);
       const description = data.current.condition.text;
       const weatherIcon = data.current.condition.icon;
@@ -71,7 +107,7 @@ const Weather = () => {
       ) : (
         <div className="weather-section">
           {/* Current weather */}
-          <CurrentWeather currentWeather={currentWeather} />
+          {<CurrentWeather currentWeather={currentWeather} />}
 
           {/* Hourly weather forecast list */}
           <div className="hourly-forecast">
