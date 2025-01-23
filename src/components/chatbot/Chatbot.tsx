@@ -3,7 +3,7 @@ import ChatbotIcon from "./ChatbotIcon";
 import ChatbotCloseIcon from "./ChatbotCloseIcon";
 import ChatForm from "./ChatForm";
 import ChatMessage from "./ChatMessage";
-import { companyInfo } from "../../companyInfo";
+import { companyInfo } from "../../company-info";
 import ChatbotEnterIcon from "./ChatbotEnterIcon";
 
 interface ChatMessageType {
@@ -81,10 +81,10 @@ const Chatbot = () => {
         id="chatbot-toggler"
       >
         <span className="material-symbols-rounded">
-          <ChatbotIcon />
+          <ChatbotIcon color="white"/>
         </span>
         <span className="material-symbols-rounded">
-          <ChatbotCloseIcon />
+          <ChatbotCloseIcon color="white"/>
         </span>
       </button>
 
@@ -106,7 +106,7 @@ const Chatbot = () => {
         {/* Chatbot Body */}
         <div ref={chatBodyRef} className="chat-body">
           <div className="message bot-message">
-            <ChatbotIcon />
+            <ChatbotIcon color="white"/>
             <p className="message-text">
               Hey there <br /> How can I help you today?
             </p>
