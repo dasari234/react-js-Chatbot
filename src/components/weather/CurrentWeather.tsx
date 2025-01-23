@@ -1,7 +1,7 @@
 interface Weather {
-  weatherIcon?: string;
-  temperature?: string;
-  description?: string;
+  temperature: number;
+  description: string;
+  weatherIcon: string;
 }
 
 interface Props {

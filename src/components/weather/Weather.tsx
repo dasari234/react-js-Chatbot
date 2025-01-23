@@ -39,8 +39,11 @@ interface WeatherAPIResponse {
 }
 
 const Weather = () => {
-  const [currentWeather, setCurrentWeather] = useState<CurrentWeatherData | null>(null);
-  const [hourlyForecasts, setHourlyForecasts] = useState<HourlyForecastData[]>([]);
+  const [currentWeather, setCurrentWeather] =
+    useState<CurrentWeatherData | null>(null);
+  const [hourlyForecasts, setHourlyForecasts] = useState<HourlyForecastData[]>(
+    []
+  );
   const [hasNoResults, setHasNoResults] = useState<boolean>(false);
   const searchInputRef = useRef<HTMLInputElement | null>(null);
   const API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
@@ -59,7 +62,7 @@ const Weather = () => {
   // Fetches weather details based on the API URL
   const getWeatherDetails = async (API_URL: RequestInfo | URL) => {
     setHasNoResults(false);
-    
+
     if (window.innerWidth <= 768) {
       searchInputRef?.current?.focus();
     }
@@ -79,7 +82,10 @@ const Weather = () => {
         ...data.forecast.forecastday[0].hour,
         ...data.forecast.forecastday[1].hour,
       ];
-      searchInputRef.current.value = data.location.name;
+      if (searchInputRef.current) {
+        searchInputRef.current.value = data.location.name;
+      }
+
       filterHourlyForecast(combinedHourlyData);
     } catch {
       setHasNoResults(true);
@@ -90,7 +96,7 @@ const Weather = () => {
     const defaultCity = "Hyderabad";
     const API_URL = `https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${defaultCity}&days=2&aqi=true`;
     getWeatherDetails(API_URL);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -107,7 +113,7 @@ const Weather = () => {
       ) : (
         <div className="weather-section">
           {/* Current weather */}
-          {<CurrentWeather currentWeather={currentWeather} />}
+          {currentWeather && <CurrentWeather currentWeather={currentWeather} />}
 
           {/* Hourly weather forecast list */}
           <div className="hourly-forecast">
