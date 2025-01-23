@@ -6,10 +6,17 @@ import ChatMessage from "./ChatMessage";
 import { companyInfo } from "../../companyInfo";
 import ChatbotEnterIcon from "./ChatbotEnterIcon";
 
+interface ChatMessageType {
+  role: "model" | "user";
+  text: string;
+  isError?: boolean;
+  hideInChat?: boolean;
+}
+
 const Chatbot = () => {
-  const chatBodyRef = useRef();
-  const [showChatbot, setShowChatbot] = useState(false);
-  const [chatHistory, setChatHistory] = useState([
+  const chatBodyRef = useRef<HTMLDivElement | null>(null);
+  const [showChatbot, setShowChatbot] = useState<boolean>(false);
+  const [chatHistory, setChatHistory] = useState<ChatMessageType[]>([
     {
       hideInChat: true,
       role: "model",
@@ -17,9 +24,9 @@ const Chatbot = () => {
     },
   ]);
 
-  const generateBotResponse = async (history: unknown) => {
+  const generateBotResponse = async (history: ChatMessageType[]) => {
     // Helper function to update chat history
-    const updateHistory = (text, isError = false) => {
+    const updateHistory = (text: string, isError = false) => {
       setChatHistory((prev) => [
         ...prev.filter((msg) => msg.text != ""),
         { role: "model", text, isError },
@@ -27,12 +34,12 @@ const Chatbot = () => {
     };
 
     // Format chat history for API request
-    history = history.map(({ role, text }) => ({ role, parts: [{ text }] }));
+    const formattedHistory = history.map(({ role, text }) => ({ role, parts: [{ text }] }));
 
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ contents: history }),
+      body: JSON.stringify({ contents: formattedHistory }),
     };
 
     try {
@@ -52,16 +59,19 @@ const Chatbot = () => {
       updateHistory(apiResponseText);
     } catch (error) {
       // Update chat history with the error message
-      updateHistory(error.message, true);
+      const errorMessage = error instanceof Error ? error.message : "An unexpected error occurred.";
+      updateHistory(errorMessage, true);
     }
   };
 
   useEffect(() => {
     // Auto-scroll whenever chat history updates
-    chatBodyRef.current.scrollTo({
-      top: chatBodyRef.current.scrollHeight,
-      behavior: "smooth",
-    });
+    if (chatBodyRef.current) {
+      chatBodyRef.current.scrollTo({
+        top: chatBodyRef.current.scrollHeight,
+        behavior: "smooth",
+      });
+    }
   }, [chatHistory]);
 
   return (

@@ -1,7 +1,18 @@
 import ChatbotBubbleIcon from "./ChatbotBubbleIcon";
 import ChatbotIcon from "./ChatbotIcon";
 
-const ChatMessage = ({ chat }) => {
+interface Chat {
+  role: "user" | "model";
+  text: string;
+  hideInChat?: boolean;
+  isError?: boolean;
+}
+
+interface ChatMessageProps {
+  chat: Chat; 
+}
+
+const ChatMessage = ({ chat }: ChatMessageProps) => {
   return (
     !chat.hideInChat && (
       <div
