@@ -7,7 +7,7 @@ const SearchSection = ({ getWeatherDetails, searchInputRef }) => {
     const handleCitySearch = (e) => {
       e.preventDefault();
       const input = e.target.querySelector(".search-input");
-      const API_URL = `https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${input.value}&days=2`;
+      const API_URL = `https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${input.value}&days=2&aqi=true`;
       getWeatherDetails(API_URL);
     };
   
@@ -15,7 +15,7 @@ const SearchSection = ({ getWeatherDetails, searchInputRef }) => {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
-          const API_URL = `https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${latitude},${longitude}&days=2`;
+          const API_URL = `https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${latitude},${longitude}&days=2&aqi=true`;
           getWeatherDetails(API_URL); 
           // eslint-disable-next-line @typescript-eslint/no-unused-expressions
           window.innerWidth >= 768 && searchInputRef.current.focus();

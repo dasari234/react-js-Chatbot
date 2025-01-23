@@ -1,13 +1,19 @@
 import { useRef } from "react";
 import ChatbotEnterIcon from "./ChatbotEnterIcon";
 
-const ChatForm = ({ chatHistory, setChatHistory, generateBotResponse }) => {
-  const inputRef = useRef();
-  const handleFormSubmit = (e) => {
+interface Props {
+  chatHistory?: string;
+  setChatHistory?: string;
+  generateBotResponse?: string
+}
+
+const ChatForm = ({ chatHistory, setChatHistory, generateBotResponse }: Props) => {
+  const inputRef = useRef<HTMLInputElement | null>();
+  const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const userMessage = inputRef.current.value.trim();
+    const userMessage = inputRef.current?.value.trim();
     if (!userMessage) return;
-    inputRef.current.value = "";
+    if(inputRef.current) inputRef.current.value = "";
 
     setChatHistory((history) => [
       ...history,

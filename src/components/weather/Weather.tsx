@@ -52,7 +52,7 @@ const Weather = () => {
 
   useEffect(() => {
     const defaultCity = "Hyderabad";
-    const API_URL = `https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${defaultCity}&days=2`;
+    const API_URL = `https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${defaultCity}&days=2&aqi=true`;
     getWeatherDetails(API_URL);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
