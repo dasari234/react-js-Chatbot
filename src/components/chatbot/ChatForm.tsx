@@ -1,33 +1,38 @@
 import { useRef } from "react";
 import ChatbotEnterIcon from "./ChatbotEnterIcon";
 
-interface Props {
-  chatHistory?: string;
-  setChatHistory?: string;
-  generateBotResponse?: string
+interface ChatHistoryItem {
+  role: "user" | "model";
+  text: string;
 }
 
-const ChatForm = ({ chatHistory, setChatHistory, generateBotResponse }: Props) => {
-  const inputRef = useRef<HTMLInputElement | null>();
+interface Props {
+  chatHistory?: ChatHistoryItem[];
+  setChatHistory?: React.Dispatch<React.SetStateAction<ChatHistoryItem[]>>;
+  generateBotResponse?: (history: ChatHistoryItem[]) => void;
+}
+
+const ChatForm = ({ chatHistory = [], setChatHistory, generateBotResponse }: Props) => {
+  const inputRef = useRef<HTMLInputElement | null>(null);
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const userMessage = inputRef.current?.value.trim();
     if (!userMessage) return;
     if(inputRef.current) inputRef.current.value = "";
 
-    setChatHistory((history) => [
+    setChatHistory?.((history) => [
       ...history,
       { role: "user", text: userMessage },
     ]);
 
     setTimeout(() => {
-      setChatHistory((history) => [
+      setChatHistory?.((history) => [
         ...history,
         { role: "model", text: "" },
       ]);
 
       // Call the function to generate the bot's response
-      generateBotResponse([
+      generateBotResponse?.([
         ...chatHistory,
         {
           role: "user",
